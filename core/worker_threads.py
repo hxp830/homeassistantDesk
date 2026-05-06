@@ -1,5 +1,5 @@
 """
-Worker Threads for Prism Desktop
+Worker Threads for homeassistantDesk
 """
 
 import logging

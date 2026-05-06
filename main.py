@@ -32,7 +32,7 @@ logging.basicConfig(
     ]
 )
 
-VERSION = "1.4.3"
+VERSION = "1.5.1"
 TOGGLE_ARG = "--toggle"
 WELCOME_ARG = "--welcome"
 
@@ -80,7 +80,7 @@ def _create_task_safe(coro):
     """
     QTimer.singleShot(0, lambda: asyncio.create_task(coro))
 
-class PrismDesktopApp(QObject):
+class HomeassistantDeskApp(QObject):
     """Main application controller."""
     
     def __init__(self):
@@ -1076,5 +1076,5 @@ if __name__ == '__main__':
     
     with loop:
         load_mdi_font()
-        controller = PrismDesktopApp()
+        controller = HomeassistantDeskApp()
         loop.run_forever()

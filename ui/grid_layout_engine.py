@@ -1,5 +1,5 @@
 """
-Grid Layout Engine for Prism Desktop
+Grid Layout Engine for homeassistantDesk
 Handles the mathematical logic for placing buttons in the dashboard grid.
 Uses explicit (row, col) coordinates for stable positioning across resizes.
 """

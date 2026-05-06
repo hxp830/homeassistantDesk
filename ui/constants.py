@@ -1,6 +1,6 @@
 """
 UI Constants
-Shared dimensions and values for the Prism Desktop UI.
+Shared dimensions and values for the homeassistantDesk UI.
 """
 
 # Grid Layout

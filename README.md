@@ -1,41 +1,28 @@
-# AetherDesk
-**A Home Assistant PC App for Windows & Linux**
+# homeassistantDesk
 
-AetherDesk brings Home Assistant to your PC with a modern, lightweight desktop experience.  
-It features a sleek dashboard with smooth animations, build in notifications, intuitive drag-and-drop customization, and deep integration with Home Assistant entities.
+`homeassistantDesk` is a desktop companion for Home Assistant on Windows and Linux.  
+It brings a configurable dashboard, tray integration, fast entity access, notifications, and multilingual UI support into a single desktop app.
 
+## Highlights
 
-<img width="623" height="600" alt="image" src="https://github.com/user-attachments/assets/bb88339a-f68c-42ac-9d09-d6b443c204d8" />
+- Desktop dashboard with drag-and-drop layout
+- Real-time Home Assistant sync over WebSocket
+- System tray integration
+- Entity shortcuts and quick actions
+- Camera, weather, climate, media, printer, mower, vacuum, and sensor support
+- Multilingual UI foundation with English, Simplified Chinese, and Russian
+- Windows executable build and Linux AppImage build workflow
 
+## Supported Languages
 
+- English
+- Simplified Chinese
+- Russian
 
-
-
-
-## Features
-
-- **System Tray Integration**: The app stays tucked away in your tray until you need it.
-- **PC notifications**: Send notifications to your PC 
-- **Resizeable dashboard**: adjust the size of your dashboard according to your needs.
-- **Morphing Controls**: Click and hold widgets to expand them into granular controls like dimmers or thermostats.
-- **Drag & Drop Customization**: Rearrange your dashboard grid simply by dragging icons around.
-- **Real-time Sync**: Uses Home Assistant's WebSocket API for instant state updates.
-- **Customizable Appearance**: Choose from different border effects (like Rainbow or Aurora) and customize button colors.
-- **Keyboard Shortcuts**: Create custom shortcuts for your button tiles
-- **Multilingual UI base**: Language-ready structure for English, Simplified Chinese, and Russian
-
-## Multilingual Development
-
-This workspace now includes a basic i18n layer for:
-
-- English (`en`)
-- Simplified Chinese (`zh`)
-- Russian (`ru`)
-
-The current approach uses a single codebase with runtime language switching instead of three separate forks.  
-Language is stored in `appearance.language`, and the translation registry lives in `core/i18n.py`.
+Language is stored in `appearance.language` and is handled through [core/i18n.py](core/i18n.py).
 
 ## Supported Entity Types
+
 - Automation
 - Camera
 - Climate
@@ -43,124 +30,71 @@ Language is stored in `appearance.language`, and the translation registry lives 
 - Fan
 - Light / Switch
 - Lawn Mower
-- Media Controller
+- Media Player
 - Scene
-- Sun
 - Script
 - Sensor
+- Sun
 - Vacuum
 - Weather
+- 3D Printer tile
 
-## 3D printer tile
-- Camera
-- Nozzle Temperature
-- Nozzle Target Temperature
-- Bed Temperature
-- Bed Target Temperature
-- State
+## Run From Source
 
-## Keyboard Shortcuts
-- **Open / Close App**: Use the shortcut defined in Settings under 'App toggle'.
-- **Custom Shortcuts**: Define custom shortcuts for any button via the Add/Edit menu.
+1. Install dependencies:
 
-## Adjustable grid
-![gif-grid](https://github.com/user-attachments/assets/70d9b5f6-bef0-4f86-a6e3-59790e3f5460)
+```bash
+pip install -r requirements.txt
+```
 
-## Widget overlays
-![gif-overlay](https://github.com/user-attachments/assets/244bb7a7-be80-499e-a343-ec8773bb1307)
+2. Start the app:
 
+```bash
+python main.py
+```
 
-
-## Installation
-
-### Windows Installer
-Download the latest `AetherDeskSetup.exe` from the Releases page. This will install the app and optionally set it to start with Windows.
-
-### Linux Installer
-Download the latest `.AppImage` from the Releases page.
-
-1. Make it executable:
-   ```bash
-   chmod +x AetherDesk-x86_64.AppImage
-   ```
-2. Run it:
-   ```bash
-   ./AetherDesk-x86_64.AppImage
-   ```
-
-> **Note:** Some distributions (e.g. Ubuntu 22.04+) require `libfuse2` for AppImages to run:
-> ```bash
-> sudo apt install libfuse2
-> ```
-
-**GNOME:**
-- Install `AppIndicator and KStatusNotifierItem Support` through `Extension Manager` for system tray support.
-- Wayland: GNOME has limited global shortcut support. As a workaround, you can bind the following command to a custom keyboard shortcut in your system settings to toggle the app:
-  ```bash
-  /path/to/AetherDesk-x86_64.AppImage --toggle
-  ```
-  Binding shortcuts to individual entities is not supported.
-
-**KDE:**
-- System tray works out of the box.
-- The app-toggle shortcut works via `org.freedesktop.portal.GlobalShortcuts`.
-- Binding shortcuts to individual entities is not supported on KDE.
-
-### Manual / Portable
-You can also download the standalone `.exe` if you prefer not to install anything. Just run it, and it will create a configuration file in the same directory.
-
-## Running from Source
-
-If you want to modify the code or run it manually:
-
-1. Clone this repository.
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Run the application:
-   ```bash
-   python main.py
-   ```
-
-## Configuration
-
-Upon first launch, you will be asked for your Home Assistant URL and a Long-Lived Access Token. You can generate this token in your Home Assistant profile settings.
-
-<img width="617" height="941" alt="image" src="https://github.com/user-attachments/assets/36309cb4-a316-4469-87a0-5d1ee68f22d2" />
-
-
-
-
-
-
-
-## Building
+## Build
 
 ### Windows
-To build the executable yourself, run the included build script:
+
+Build the executable:
 
 ```bash
 python build_exe.py
 ```
 
-This will run PyInstaller and generate a single-file executable in the `dist` folder.
+Expected output:
 
-To build the installer, open `setup.iss` with [Inno Setup](https://jrsoftware.org/isdl.php) and compile it.
+- `dist/homeassistantDesk.exe`
 
-### Linux (AppImage)
-1. Download `appimagetool-x86_64.AppImage` from the [appimagetool releases](https://github.com/AppImage/appimagetool/releases) and place it in the project folder.
-2. Run the build script:
+To build the Windows installer, compile [setup.iss](setup.iss) with Inno Setup.
+
+### Linux
+
+Build the AppImage:
 
 ```bash
 python3 build_linux.py
 ```
 
-This will build the binary, create an AppDir, and package it into an AppImage.
+## Repository Layout
 
-## Troubleshooting
+- `core/`: config, versioning, branding, i18n, Home Assistant client helpers
+- `services/`: notifications, mobile app registration, shortcuts, IPC, location
+- `ui/`: dashboard, settings, widgets, overlays, themes
+- `build_exe.py`: Windows packaging
+- `build_linux.py`: Linux packaging
 
-**Reverse proxy users:** If you see `WS Error: 400, message="Duplicate 'Server' header found."`, your proxy is adding a duplicate `Server` header. In Caddy, add `header_up -Server` to your `reverse_proxy` block. Other proxies may have a similar setting.
+## Branding
+
+This fork is branded as `homeassistantDesk`.
+
+Key branding constants live in [core/branding.py](core/branding.py).
+
+## Release Notes
+
+Current release notes are tracked in [RELEASE_NOTES.md](RELEASE_NOTES.md).
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-# homeassistantDesk
+
+This project remains under the MIT License. See [LICENSE](LICENSE).

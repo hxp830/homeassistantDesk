@@ -1,5 +1,5 @@
 """
-Theme Manager for Prism Desktop
+Theme Manager for homeassistantDesk
 Handles light/dark/system theme switching with cross-platform integration.
 """
 

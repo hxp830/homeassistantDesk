@@ -1,5 +1,5 @@
 {
-  description = "Prism Desktop";
+  description = "homeassistantDesk";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -35,12 +35,12 @@
         in
         {
           default = pkgs.stdenvNoCC.mkDerivation rec {
-            pname = "prism-desktop";
+            pname = "homeassistantdesk";
             inherit version;
 
             src = pkgs.fetchFromGitHub {
               owner = "lasselian";
-              repo = "prism-desktop";
+              repo = "homeassistantDesk";
               rev = version;
               hash = "sha256-G+RFAieoNOn1H98W3DCX5bYWQxBjJppufpI+Msc9kBQ=";
             };
@@ -63,7 +63,7 @@
               ${pkgs.python3}/bin/python - <<'PY'
               from pathlib import Path
 
-              # Fix config path so Prism does not try to write into /nix/store
+              # Fix config path so homeassistantDesk does not try to write into /nix/store
               p = Path("core/utils.py")
               s = p.read_text()
 
@@ -101,32 +101,32 @@
             installPhase = ''
               runHook preInstall
 
-              mkdir -p $out/share/prism-desktop
-              cp -r core services ui $out/share/prism-desktop/
+              mkdir -p $out/share/homeassistantdesk
+              cp -r core services ui $out/share/homeassistantdesk/
               cp main.py icon.png materialdesignicons-webfont.ttf mdi_mapping.json \
                 LICENSE README.md \
-                $out/share/prism-desktop/
+                $out/share/homeassistantdesk/
 
               mkdir -p $out/bin
-              makeWrapper ${pythonEnv}/bin/python $out/bin/prism-desktop \
-                --add-flags "$out/share/prism-desktop/main.py"
+              makeWrapper ${pythonEnv}/bin/python $out/bin/homeassistantdesk \
+                --add-flags "$out/share/homeassistantdesk/main.py"
 
               mkdir -p $out/share/icons/hicolor/256x256/apps
-              cp icon.png $out/share/icons/hicolor/256x256/apps/prism-desktop.png
+              cp icon.png $out/share/icons/hicolor/256x256/apps/homeassistantdesk.png
 
               runHook postInstall
             '';
 
             preFixup = ''
-              wrapQtApp "$out/bin/prism-desktop"
+              wrapQtApp "$out/bin/homeassistantdesk"
             '';
 
             desktopItems = [
               (pkgs.makeDesktopItem {
-                name = "prism-desktop";
-                exec = "prism-desktop";
-                icon = "prism-desktop";
-                desktopName = "Prism Desktop";
+                name = "homeassistantdesk";
+                exec = "homeassistantdesk";
+                icon = "homeassistantdesk";
+                desktopName = "homeassistantDesk";
                 genericName = "Home Assistant desktop dashboard";
                 comment = "A customizable desktop dashboard for Home Assistant";
                 categories = [ "Utility" ];
@@ -136,10 +136,10 @@
 
             meta = with pkgs.lib; {
               description = "Home Assistant desktop dashboard";
-              homepage = "https://github.com/lasselian/prism-desktop";
+              homepage = "https://github.com/hxp830/homeassistantDesk";
               license = licenses.mit;
               platforms = platforms.linux;
-              mainProgram = "prism-desktop";
+              mainProgram = "homeassistantdesk";
             };
           };
         });
@@ -147,7 +147,7 @@
       apps = forAllSystems (pkgs: {
         default = {
           type = "app";
-          program = "${self.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/prism-desktop";
+          program = "${self.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/homeassistantdesk";
         };
       });
     };

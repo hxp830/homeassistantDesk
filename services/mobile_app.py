@@ -1,6 +1,6 @@
 """
-Mobile App Integration for Prism Desktop
-Registers Prism as an HA mobile app to expose a native notify service.
+Mobile App Integration for homeassistantDesk
+Registers the app as an HA mobile app to expose a native notify service.
 """
 
 import asyncio

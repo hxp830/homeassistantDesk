@@ -1,5 +1,5 @@
 """
-Dashboard Widget for Prism Desktop
+Dashboard Widget for homeassistantDesk
 The main popup menu with 4x2 grid of buttons/widgets.
 """
 

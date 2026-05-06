@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Linux Build Script for PrismDesktop.
+Linux Build Script for homeassistantDesk.
 
 Builds a standalone AppImage that works on the host architecture.
 Auto-detects x86_64 or aarch64 (Raspberry Pi) and produces the correct output.

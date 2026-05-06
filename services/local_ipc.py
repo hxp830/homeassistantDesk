@@ -1,5 +1,5 @@
 """
-Local IPC helpers for controlling an existing Prism Desktop instance.
+Local IPC helpers for controlling an existing homeassistantDesk instance.
 """
 
 from __future__ import annotations

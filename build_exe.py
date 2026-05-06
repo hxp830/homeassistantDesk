@@ -38,7 +38,7 @@ def write_build_info(base_dir: Path):
     output_path.write_text(content)
 
 def build():
-    """Build the AetherDesk executable."""
+    """Build the homeassistantDesk executable."""
     print(f"Building {APP_NAME}...")
 
     # Define paths

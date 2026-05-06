@@ -1,5 +1,5 @@
 """
-Input Manager for Prism Desktop
+Input Manager for homeassistantDesk
 Handles global keyboard shortcuts and mouse button triggers using pynput.
 """
 

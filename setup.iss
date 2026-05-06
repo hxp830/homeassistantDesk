@@ -1,10 +1,10 @@
-; Script generated for AetherDesk
+; Script generated for homeassistantDesk
 ; Requires Inno Setup: https://jrsoftware.org/isdl.php
 
-#define MyAppName "AetherDesk"
-#define MyAppVersion "1.5.0"
-#define MyAppPublisher "AetherDesk"
-#define MyAppExeName "AetherDesk.exe"
+#define MyAppName "homeassistantDesk"
+#define MyAppVersion "1.5.1"
+#define MyAppPublisher "homeassistantDesk"
+#define MyAppExeName "homeassistantDesk.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -18,7 +18,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=installer
-OutputBaseFilename=AetherDeskSetup
+OutputBaseFilename=homeassistantDeskSetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

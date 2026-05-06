@@ -47,13 +47,13 @@ def get_platform_config_dir() -> Path:
     system = platform.system()
     
     if system == 'Windows':
-        # Windows: %APPDATA%/AetherDesk
+        # Windows: %APPDATA%/homeassistantDesk
         return Path(os.getenv('APPDATA', Path.home())) / APP_CONFIG_DIR
     elif system == 'Darwin':
-        # macOS: ~/Library/Application Support/AetherDesk
+        # macOS: ~/Library/Application Support/homeassistantDesk
         return Path.home() / "Library" / "Application Support" / APP_CONFIG_DIR
     else:
-        # Linux: ~/.config/AetherDesk (XDG compliant)
+        # Linux: ~/.config/homeassistantDesk (XDG compliant)
         xdg_config = os.getenv('XDG_CONFIG_HOME', str(Path.home() / '.config'))
         return Path(xdg_config) / APP_CONFIG_DIR
 

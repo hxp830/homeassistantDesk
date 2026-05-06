@@ -1,5 +1,5 @@
 """
-Notifications Manager for Prism Desktop
+Notifications Manager for homeassistantDesk
 Native system notifications from Home Assistant.
 Supports rich notifications with images (camera feeds etc).
 """

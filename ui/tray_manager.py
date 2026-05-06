@@ -1,5 +1,5 @@
 """
-System Tray Manager for Prism Desktop.
+System Tray Manager for homeassistantDesk.
 Uses QSystemTrayIcon (native Qt) for reliable click handling across all
 desktop environments, including KDE/SNI where pystray's left-click
 delivery is unreliable.
@@ -58,7 +58,7 @@ class TrayManager:
     # ------------------------------------------------------------------
 
     def create_icon_image(self, size: int = 64) -> Image.Image:
-        """Create a stylized AetherDesk monogram tray icon."""
+        """Create a stylized homeassistantDesk monogram tray icon."""
         scale = 4
         canvas_size = size * scale
         image = Image.new('RGBA', (canvas_size, canvas_size), (0, 0, 0, 0))

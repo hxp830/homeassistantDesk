@@ -1,5 +1,5 @@
 """
-Location Manager for Prism Desktop.
+Location Manager for homeassistantDesk.
 Provides a unified get_location() API that dispatches to:
   - Windows: WinRT Geolocation API
   - Linux: GeoClue2 via D-Bus (dbus-next)
