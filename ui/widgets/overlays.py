@@ -8,6 +8,7 @@ from PyQt6.QtGui import (
 from ui.icons import get_icon, get_mdi_font, Icons
 from core.utils import SYSTEM_FONT
 from core.temperature_utils import format_temperature
+from core.i18n import tr
 from ui.widgets.dashboard_button_painter import DashboardButtonPainter
 from ui.utils.glass_effect import draw_frosted_pill
 
@@ -586,7 +587,7 @@ class ClimateOverlay(BaseOverlay):
         painter.setFont(QFont(SYSTEM_FONT, 8, QFont.Weight.Bold))
         painter.setPen(self._fg_color(int(alpha * 0.4)))
         painter.drawText(QRect(rect.left() + margin_left, y_mode - 25, 60, 20),
-                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, "MODE")
+                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, tr("overlay.mode"))
 
         start_x = rect.left() + margin_left
         mode_icons = {
@@ -620,7 +621,7 @@ class ClimateOverlay(BaseOverlay):
         painter.setFont(QFont(SYSTEM_FONT, 8, QFont.Weight.Bold))
         painter.setPen(self._fg_color(int(alpha * 0.4)))
         painter.drawText(QRect(rect.left() + margin_left, y_fan - 25, 60, 20),
-                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, "FAN")
+                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, tr("overlay.fan"))
 
         fan_map = {'low': '1', 'medium': '2', 'high': '3', 'mid': '2', 'min': '1', 'max': 'Max'}
 
@@ -673,7 +674,7 @@ class ClimateOverlay(BaseOverlay):
         painter.setFont(QFont(SYSTEM_FONT, 8, QFont.Weight.Bold))
         painter.setPen(self._fg_color(int(alpha * 0.4)))
         painter.drawText(QRect(20, y_pos_1, 60, icon_size),
-                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, "MODE")
+                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, tr("overlay.mode"))
 
         total_items     = len(modes)
         total_icon_width = (total_items * icon_size) + ((total_items - 1) * spacing)
@@ -711,7 +712,7 @@ class ClimateOverlay(BaseOverlay):
         painter.setFont(QFont(SYSTEM_FONT, 8, QFont.Weight.Bold))
         painter.setPen(self._fg_color(int(alpha * 0.4)))
         painter.drawText(QRect(20, y_pos_2, 60, icon_size),
-                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, "FAN")
+                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, tr("overlay.fan"))
 
         total_items      = len(fan_modes)
         total_icon_width = (total_items * icon_size) + ((total_items - 1) * spacing)
@@ -955,7 +956,7 @@ class PrinterOverlay(BaseOverlay):
             painter.setFont(get_mdi_font(32))
             painter.drawText(rect, Qt.AlignmentFlag.AlignCenter, get_icon("video-off"))
             painter.setFont(QFont(SYSTEM_FONT, 10))
-            painter.drawText(rect.adjusted(0, 40, 0, 0), Qt.AlignmentFlag.AlignCenter, "No Feed")
+            painter.drawText(rect.adjusted(0, 40, 0, 0), Qt.AlignmentFlag.AlignCenter, tr("overlay.no_feed"))
 
             painter.translate(rect.x(), rect.y())
             DashboardButtonPainter._draw_pill_label(
@@ -1053,7 +1054,7 @@ class PrinterOverlay(BaseOverlay):
 
         if self._confirm_stop_mode:
             painter.setFont(QFont(SYSTEM_FONT, 9, QFont.Weight.Bold))
-            painter.drawText(self._btn_stop, Qt.AlignmentFlag.AlignCenter, "SURE?")
+            painter.drawText(self._btn_stop, Qt.AlignmentFlag.AlignCenter, tr("overlay.sure"))
         else:
             painter.setFont(get_mdi_font(16))
             painter.drawText(self._btn_stop, Qt.AlignmentFlag.AlignCenter, get_icon('stop'))
@@ -1467,7 +1468,7 @@ class RobotOverlay(BaseOverlay):
         painter.drawPath(path_sp)
 
         sp_icon  = get_icon('pause') if is_active else get_icon('play')
-        sp_label = "Pause" if is_active else "Start"
+        sp_label = tr("overlay.pause") if is_active else tr("overlay.start")
         painter.setPen(self._fg_color(alpha))
         icon_x = sp_rect.x() + 12
         painter.setFont(get_mdi_font(16))
@@ -1494,7 +1495,7 @@ class RobotOverlay(BaseOverlay):
                          Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft, get_icon('home'))
         painter.setFont(QFont(SYSTEM_FONT, 11, QFont.Weight.DemiBold))
         painter.drawText(QRectF(icon_x2 + 22, dk_rect.y(), btn_w - 34, btn_h),
-                         Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft, "Dock")
+                         Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft, tr("overlay.dock"))
 
         if self._battery_level >= 0:
             if self._battery_level > 50:

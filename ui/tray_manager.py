@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw
 from PyQt6.QtWidgets import QSystemTrayIcon, QMenu
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtCore import QObject, Qt, pyqtSignal, QRect
+from core.i18n import tr, on_language_changed
 
 
 class TraySignals(QObject):
@@ -39,6 +40,8 @@ class TrayManager:
 
         self._tray: Optional[QSystemTrayIcon] = None
         self._menu: Optional[QMenu] = None
+        self._show_action = None
+        self._quit_action = None
 
         # Qt signals (same interface as before — callers connect to these)
         self.signals = TraySignals()
@@ -55,34 +58,22 @@ class TrayManager:
     # ------------------------------------------------------------------
 
     def create_icon_image(self, size: int = 64) -> Image.Image:
-        """Create a stylized 'Prism Desktop' isometric cube icon."""
+        """Create a stylized AetherDesk monogram tray icon."""
         scale = 4
         canvas_size = size * scale
         image = Image.new('RGBA', (canvas_size, canvas_size), (0, 0, 0, 0))
         draw = ImageDraw.Draw(image)
 
-        cx = canvas_size // 2
-        cy = canvas_size // 2
-
-        radius = 28 * scale
-        h_span = int(radius * 0.866)
-        v_half = int(radius * 0.5)
-
-        p_center    = (cx, cy)
-        p_top       = (cx, cy - radius)
-        p_bot_left  = (cx - h_span, cy + v_half)
-        p_bot_right = (cx + h_span, cy + v_half)
-
-        color_left   = (0, 229, 255, 255)
-        color_right  = (213, 0, 249, 255)
-        color_bottom = (41, 98, 255, 255)
-        bg_color     = (30, 30, 30, 255)
+        bg_color = (18, 24, 40, 255)
+        beam_left = (63, 208, 255, 255)
+        beam_right = (74, 124, 255, 255)
+        bridge = (245, 248, 255, 255)
 
         if self.theme != 'dark':
-            color_left   = (0, 180, 210, 255)
-            color_right  = (180, 0, 200, 255)
-            color_bottom = (25, 60, 200, 255)
-            bg_color     = (255, 255, 255, 255)
+            bg_color = (245, 248, 252, 255)
+            beam_left = (0, 152, 204, 255)
+            beam_right = (45, 93, 226, 255)
+            bridge = (32, 42, 62, 255)
 
         bg_pad    = 1 * scale
         bg_radius = 10 * scale
@@ -98,9 +89,28 @@ class TrayManager:
                 fill=bg_color,
             )
 
-        draw.polygon([p_center, p_top, p_bot_left],  fill=color_left)
-        draw.polygon([p_center, p_top, p_bot_right], fill=color_right)
-        draw.polygon([p_center, p_bot_left, p_bot_right], fill=color_bottom)
+        left_beam = [
+            (52 * scale, 210 * scale),
+            (112 * scale, 44 * scale),
+            (152 * scale, 44 * scale),
+            (98 * scale, 210 * scale),
+        ]
+        right_beam = [
+            (158 * scale, 44 * scale),
+            (198 * scale, 44 * scale),
+            (204 * scale, 62 * scale),
+            (144 * scale, 210 * scale),
+        ]
+        bridge_rect = [
+            106 * scale,
+            128 * scale,
+            162 * scale,
+            152 * scale,
+        ]
+
+        draw.polygon(left_beam, fill=beam_left)
+        draw.polygon(right_beam, fill=beam_right)
+        draw.rounded_rectangle(bridge_rect, radius=8 * scale, fill=bridge)
 
         resampler = getattr(Image, 'Resampling', Image).LANCZOS
         return image.resize((size, size), resampler)
@@ -123,7 +133,7 @@ class TrayManager:
         qicon = self._to_qicon(self.create_icon_image())
 
         self._tray = QSystemTrayIcon(qicon)
-        self._tray.setToolTip("Prism Desktop - Home Assistant")
+        self._tray.setToolTip(tr("tray.tooltip"))
 
         # Context menu (shown on right-click).
         # WA_TranslucentBackground lets the rounded corners actually clip;
@@ -132,11 +142,11 @@ class TrayManager:
         self._menu = QMenu()
         self._menu.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self._menu.setStyleSheet(self._menu_stylesheet())
-        show_action = self._menu.addAction("Show Dashboard")
-        show_action.triggered.connect(self.signals.left_clicked)
+        self._show_action = self._menu.addAction(tr("tray.show_dashboard"))
+        self._show_action.triggered.connect(self.signals.left_clicked)
         self._menu.addSeparator()
-        quit_action = self._menu.addAction("Quit")
-        quit_action.triggered.connect(self.signals.quit_clicked)
+        self._quit_action = self._menu.addAction(tr("tray.quit"))
+        self._quit_action.triggered.connect(self.signals.quit_clicked)
 
         self._tray.setContextMenu(self._menu)
 
@@ -145,6 +155,7 @@ class TrayManager:
         self._tray.activated.connect(self._on_activated)
 
         self._tray.show()
+        on_language_changed(self.refresh_texts)
 
     def _on_activated(self, reason: QSystemTrayIcon.ActivationReason):
         """Handle tray icon activation (left-click, double-click, etc.)."""
@@ -177,6 +188,14 @@ class TrayManager:
         """Update the tray icon tooltip."""
         if self._tray:
             self._tray.setToolTip(title)
+
+    def refresh_texts(self):
+        if self._tray:
+            self._tray.setToolTip(tr("tray.tooltip"))
+        if self._show_action:
+            self._show_action.setText(tr("tray.show_dashboard"))
+        if self._quit_action:
+            self._quit_action.setText(tr("tray.quit"))
 
     def geometry(self) -> QRect:
         """Return the tray icon geometry when available."""

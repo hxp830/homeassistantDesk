@@ -10,13 +10,14 @@ import uuid
 import logging
 import aiohttp
 from typing import Optional
+from core.branding import APP_MOBILE_APP_ID, APP_MOBILE_APP_NAME, APP_MOBILE_APP_MANUFACTURER
 
 logger = logging.getLogger(__name__)
 
 # Prism's app identifier (stable — must not change between versions)
-APP_ID = "io.prism.desktop"
-APP_NAME = "Prism Desktop"
-MANUFACTURER = "Prism"
+APP_ID = APP_MOBILE_APP_ID
+APP_NAME = APP_MOBILE_APP_NAME
+MANUFACTURER = APP_MOBILE_APP_MANUFACTURER
 MODEL = "Desktop"
 OS_VERSION = platform.version()
 
@@ -26,7 +27,7 @@ def _get_device_name() -> str:
     try:
         return socket.gethostname()
     except Exception:
-        return "Prism Desktop"
+        return APP_NAME
 
 
 def _get_or_create_device_id(config: dict) -> str:
@@ -46,7 +47,7 @@ async def register_mobile_app(
     save_config_fn,
 ) -> Optional[str]:
     """
-    Register Prism as a Mobile App with Home Assistant if not already done.
+    Register the desktop app as a Mobile App with Home Assistant if not already done.
 
     Returns the webhook_id on success, or None on failure.
     Saves the webhook_id into config['mobile_app']['webhook_id'] via save_config_fn.

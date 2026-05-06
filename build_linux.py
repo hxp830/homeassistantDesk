@@ -22,6 +22,7 @@ import shutil
 import subprocess
 import platform
 from pathlib import Path
+from core.branding import APP_EXECUTABLE_NAME, APP_NAME, APP_SLUG
 
 
 def write_build_info(base_dir):
@@ -120,7 +121,7 @@ def build_binary(base_dir):
     pyinstaller_args = [
         str(venv_python), '-m', 'PyInstaller',
         'main.py',
-        '--name=PrismDesktop',
+        f'--name={APP_EXECUTABLE_NAME}',
         '--onedir',
         '--windowed',
         '--add-data=materialdesignicons-webfont.ttf:.',
@@ -138,10 +139,10 @@ def build_binary(base_dir):
         sys.exit(1)
 
     # --onedir produces a folder, not a single file
-    binary_dir = base_dir / 'dist' / 'PrismDesktop'
-    binary = binary_dir / 'PrismDesktop'
+    binary_dir = base_dir / 'dist' / APP_EXECUTABLE_NAME
+    binary = binary_dir / APP_EXECUTABLE_NAME
     if not binary.exists():
-        print("Error: Binary not found at dist/PrismDesktop/PrismDesktop")
+        print(f"Error: Binary not found at dist/{APP_EXECUTABLE_NAME}/{APP_EXECUTABLE_NAME}")
         sys.exit(1)
 
     return binary_dir
@@ -172,25 +173,25 @@ def package_appimage(base_dir, binary_dir, arch, appimagetool):
     # Copy icon
     icon_src = base_dir / 'icon.png'
     if icon_src.exists():
-        shutil.copy2(icon_src, app_dir / 'usr' / 'share' / 'icons' / 'hicolor' / '256x256' / 'apps' / 'prism-desktop.png')
-        shutil.copy2(icon_src, app_dir / 'prism-desktop.png')
+        shutil.copy2(icon_src, app_dir / 'usr' / 'share' / 'icons' / 'hicolor' / '256x256' / 'apps' / f'{APP_SLUG}.png')
+        shutil.copy2(icon_src, app_dir / f'{APP_SLUG}.png')
     else:
         print("Warning: icon.png not found.")
 
     # Create AppRun symlink
-    (app_dir / 'AppRun').symlink_to('usr/bin/PrismDesktop')
+    (app_dir / 'AppRun').symlink_to(f'usr/bin/{APP_EXECUTABLE_NAME}')
 
     # Create .desktop file
     desktop_content = """[Desktop Entry]
 Type=Application
-Name=PrismDesktop
+Name={APP_NAME}
 Comment=Home Assistant Tray Application
-Exec=PrismDesktop
-Icon=prism-desktop
+Exec={APP_EXECUTABLE_NAME}
+Icon={APP_SLUG}
 Categories=Utility;
 Terminal=false
 """
-    (app_dir / 'PrismDesktop.desktop').write_text(desktop_content)
+    (app_dir / f'{APP_EXECUTABLE_NAME}.desktop').write_text(desktop_content)
 
     # Set ARCH env var for appimagetool
     env = os.environ.copy()
@@ -204,13 +205,13 @@ Terminal=false
         sys.exit(1)
 
     # Find and rename the output
-    # appimagetool outputs: PrismDesktop-<arch>.AppImage
-    expected_output = base_dir / f'PrismDesktop-{arch}.AppImage'
+    # appimagetool outputs: <AppName>-<arch>.AppImage
+    expected_output = base_dir / f'{APP_EXECUTABLE_NAME}-{arch}.AppImage'
     if expected_output.exists():
         print(f"\n✅ Build complete: {expected_output.name}")
     else:
         # Might have a different default name, find it
-        for f in base_dir.glob('PrismDesktop*.AppImage'):
+        for f in base_dir.glob(f'{APP_EXECUTABLE_NAME}*.AppImage'):
             print(f"\n✅ Build complete: {f.name}")
             break
 
@@ -228,7 +229,7 @@ def main():
     base_dir = Path(__file__).parent.absolute()
 
     print(f"╔══════════════════════════════════════════╗")
-    print(f"║   PrismDesktop Linux Build               ║")
+    print(f"║   {APP_NAME} Linux Build                 ║")
     print(f"║   Architecture: {arch:<25s}║")
     print(f"╚══════════════════════════════════════════╝")
 

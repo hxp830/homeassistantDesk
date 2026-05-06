@@ -2,6 +2,7 @@ import sys
 import os
 import platform
 from pathlib import Path
+from core.branding import APP_CONFIG_DIR
 
 # Cross-platform system font
 def get_system_font() -> str:
@@ -46,15 +47,15 @@ def get_platform_config_dir() -> Path:
     system = platform.system()
     
     if system == 'Windows':
-        # Windows: %APPDATA%/PrismDesktop
-        return Path(os.getenv('APPDATA', Path.home())) / "PrismDesktop"
+        # Windows: %APPDATA%/AetherDesk
+        return Path(os.getenv('APPDATA', Path.home())) / APP_CONFIG_DIR
     elif system == 'Darwin':
-        # macOS: ~/Library/Application Support/PrismDesktop
-        return Path.home() / "Library" / "Application Support" / "PrismDesktop"
+        # macOS: ~/Library/Application Support/AetherDesk
+        return Path.home() / "Library" / "Application Support" / APP_CONFIG_DIR
     else:
-        # Linux: ~/.config/PrismDesktop (XDG compliant)
+        # Linux: ~/.config/AetherDesk (XDG compliant)
         xdg_config = os.getenv('XDG_CONFIG_HOME', str(Path.home() / '.config'))
-        return Path(xdg_config) / "PrismDesktop"
+        return Path(xdg_config) / APP_CONFIG_DIR
 
 
 def get_config_path(filename: str = "config.json") -> Path:

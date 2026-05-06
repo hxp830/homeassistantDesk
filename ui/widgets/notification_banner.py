@@ -13,6 +13,7 @@ from ui.constants import BANNER_HEIGHT, BANNER_VERTICAL_MARGIN, GRID_MARGIN_LEFT
 from ui.visuals.dashboard_effects import (
     draw_aurora_border, draw_rainbow_border, draw_prism_shard_border, draw_liquid_mercury_border
 )
+from core.i18n import tr, on_language_changed
 
 
 GAP = 5  # px gap between dashboard edge and banner
@@ -87,6 +88,7 @@ class NotificationBanner(QWidget):
         self._glass_ui = glass_ui
         self._glass_is_light = glass_is_light
         self._glass_pixmap = None
+        on_language_changed(self._refresh_translations)
 
         # Border effect animation (same pattern as dashboard)
         self._border_progress = 0.0
@@ -215,7 +217,7 @@ class NotificationBanner(QWidget):
                 f"  font-family: '{SYSTEM_FONT}'; font-size: 11px; font-weight: 500; }}"
                 f"QPushButton:hover {{ background: {yes_bg_hover}; }}"
             )
-            self.btn_yes = QPushButton("Yes")
+            self.btn_yes = QPushButton(tr("notify.confirm_yes"))
             self.btn_yes.setFixedHeight(btn_h)
             self.btn_yes.setMinimumWidth(54)
             self.btn_yes.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -229,7 +231,7 @@ class NotificationBanner(QWidget):
                 f"  font-family: '{SYSTEM_FONT}'; font-size: 11px; font-weight: 500; }}"
                 f"QPushButton:hover {{ background: {no_bg_hover}; }}"
             )
-            self.btn_no = _CountdownButton("No", is_light=glass_is_light, corner_radius=6)
+            self.btn_no = _CountdownButton(tr("notify.confirm_no"), is_light=glass_is_light, corner_radius=6)
             self.btn_no.setFixedHeight(btn_h)
             self.btn_no.setMinimumWidth(54)
             self.btn_no.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -467,6 +469,12 @@ class NotificationBanner(QWidget):
         self._slide_anim.setEasingCurve(QEasingCurve.Type.InCubic)
         self._slide_anim.finished.connect(callback)
         self._slide_anim.start()
+
+    def _refresh_translations(self):
+        if hasattr(self, 'btn_yes'):
+            self.btn_yes.setText(tr("notify.confirm_yes"))
+        if hasattr(self, 'btn_no'):
+            self.btn_no.setText(tr("notify.confirm_no"))
 
     def _on_confirm(self):
         self._animate_out(self.confirmed.emit)

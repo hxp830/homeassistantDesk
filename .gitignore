@@ -1,5 +1,6 @@
 # User Configuration (Secrets)
 config.json
+*.pid
 
 # Build Artifacts
 dist/

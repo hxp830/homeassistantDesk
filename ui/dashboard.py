@@ -45,6 +45,7 @@ from ui.managers.overlay_manager import OverlayManager
 from ui.managers.grid_manager import GridManager, VirtualButton
 from ui.settings_widget import SettingsWidget
 from ui.button_edit_widget import ButtonEditWidget
+from core.i18n import tr, on_language_changed
 from ui.visuals.dashboard_effects import (
     draw_aurora_border, draw_rainbow_border, draw_prism_shard_border, 
     draw_liquid_mercury_border, capture_glass_background
@@ -178,6 +179,7 @@ class Dashboard(QWidget):
         
         if self.theme_manager:
             theme_manager.theme_changed.connect(self.on_theme_changed)
+        on_language_changed(self._refresh_translations)
 
         # Window Height Animation
         self._anim_height = 0
@@ -943,7 +945,7 @@ class Dashboard(QWidget):
         btn_height = FOOTER_HEIGHT
 
         # Left Button (Home Assistant)
-        self.btn_left = FooterButton("  HOME ASSISTANT") # Add space for spacing
+        self.btn_left = FooterButton("  " + tr("dashboard.home_assistant")) # Add space for spacing
         self.btn_left.setFixedHeight(btn_height)
         self.btn_left.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.btn_left.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -985,7 +987,7 @@ class Dashboard(QWidget):
         footer_layout.addWidget(self.btn_page_indicator)
 
         # Right Button (Settings) - now calls show_settings directly
-        self.btn_settings = FooterButton("SETTINGS")
+        self.btn_settings = FooterButton(tr("dashboard.settings"))
         self.btn_settings.setFixedHeight(btn_height)
         self.btn_settings.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.btn_settings.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -1034,6 +1036,15 @@ class Dashboard(QWidget):
         except Exception:
             QDesktopServices.openUrl(QUrl(url))
         self.hide()
+
+    def _refresh_translations(self):
+        if hasattr(self, 'btn_left'):
+            self.btn_left.setText("  " + tr("dashboard.home_assistant"))
+        if hasattr(self, 'btn_settings'):
+            self.btn_settings.setText(tr("dashboard.settings"))
+        for button in self.buttons:
+            if not button.config:
+                button.update_content()
 
     def update_style(self):
         """Update dashboard style based on theme."""

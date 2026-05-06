@@ -13,6 +13,7 @@ from PyQt6.QtGui import (
     QIcon, QPainterPath
 )
 from ui.icons import get_icon, get_mdi_font, Icons, get_icon_for_type
+from core.i18n import tr
 from core.utils import SYSTEM_FONT
 from core.temperature_utils import format_temperature, is_temperature_entity
 from ui.widgets.dashboard_button_painter import DashboardButtonPainter
@@ -527,7 +528,7 @@ class DashboardButton(QFrame):
         """Show add button."""
         self.value_label.setFont(get_mdi_font(24))
         self.value_label.setText(Icons.PLUS)
-        self.name_label.setText("Add")
+        self.name_label.setText(tr("dashboard.add"))
         self.value_label.show()
         self.name_label.show()
         self._cached_display_pixmap = None
@@ -583,8 +584,8 @@ class DashboardButton(QFrame):
 
             text = (
                 f"<div style='font-size: 22px; font-weight: 300; margin-bottom: 4px;'>{emoji_html} {temp_str}</div>"
-                f"<div style='font-size: 11px; color: #aaaaaa; font-weight: 600;'>Humidity: {humidity}%</div>"
-                f"<div style='font-size: 11px; color: #aaaaaa; font-weight: 600;'>Wind: {wind_display}</div>"
+                f"<div style='font-size: 11px; color: #aaaaaa; font-weight: 600;'>{tr('weather.humidity', humidity=humidity)}</div>"
+                f"<div style='font-size: 11px; color: #aaaaaa; font-weight: 600;'>{tr('weather.wind', wind=wind_display)}</div>"
             )
             self.value_label.setTextFormat(Qt.TextFormat.RichText)
             self.value_label.setText(text)
@@ -1782,31 +1783,31 @@ class DashboardButton(QFrame):
         """)
         
         if self.config:
-            edit_action = menu.addAction("Edit")
+            edit_action = menu.addAction(tr("dashboard.edit"))
             edit_action.triggered.connect(lambda: self.edit_requested.emit(self.slot))
             
-            dup_action = menu.addAction("Duplicate")
+            dup_action = menu.addAction(tr("dashboard.duplicate"))
             dup_action.triggered.connect(lambda: self.duplicate_requested.emit(self.slot))
 
             # Move to ▶
             if self._page_count > 1:
-                move_menu = menu.addMenu("Move to \u25b6")
+                move_menu = menu.addMenu(tr("dashboard.move_to"))
                 move_menu.setStyleSheet(menu.styleSheet())
                 for p in range(self._page_count):
                     if p == self._current_page:
                         continue
-                    action = move_menu.addAction(f"Page {p + 1}")
+                    action = move_menu.addAction(tr("dashboard.page_n", page=p + 1))
                     action.triggered.connect(
                         lambda checked, page=p: self.move_to_page_requested.emit(self.slot, page)
                     )
             else:
-                move_action = menu.addAction("Move to \u25b6")
+                move_action = menu.addAction(tr("dashboard.move_to"))
                 move_action.setEnabled(False)
 
-            clear_action = menu.addAction("Clear")
+            clear_action = menu.addAction(tr("dashboard.clear"))
             clear_action.triggered.connect(lambda: self.clear_requested.emit(self.slot))
         else:
-            add_action = menu.addAction("Add")
+            add_action = menu.addAction(tr("dashboard.add"))
             add_action.triggered.connect(lambda: self.clicked.emit(self.config)) # Trigger click (add)
         
         menu.exec(self.mapToGlobal(pos))

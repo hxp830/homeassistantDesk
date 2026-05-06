@@ -15,6 +15,7 @@ import os
 import uuid
 from pathlib import Path
 from typing import Callable
+from core.branding import APP_NAME, APP_SLUG
 
 from dbus_next import BusType, Message, MessageType, Variant
 from dbus_next.aio import MessageBus
@@ -29,7 +30,7 @@ DBUS_IFACE = "org.freedesktop.DBus"
 DBUS_OBJECT_PATH = "/org/freedesktop/DBus"
 REGISTRY_IFACE = "org.freedesktop.host.portal.Registry"
 SHORTCUT_ID = "toggle-dashboard"
-APP_ID = "prism-desktop"
+APP_ID = APP_SLUG
 
 logger = logging.getLogger(__name__)
 
@@ -180,7 +181,7 @@ class WaylandGlobalShortcut:
         return session_handle
 
     async def _bind_shortcut(self, session_handle: str, preferred_trigger: str):
-        request_token = _random_token("prism_bind")
+        request_token = _random_token("aether_bind")
         response_future = await self._prepare_request(request_token)
 
         reply = await self._call_portal(
@@ -191,7 +192,7 @@ class WaylandGlobalShortcut:
                 [[
                     SHORTCUT_ID,
                     {
-                        "description": Variant("s", "Toggle Prism Desktop"),
+                        "description": Variant("s", f"Toggle {APP_NAME}"),
                         "preferred_trigger": Variant("s", preferred_trigger),
                     },
                 ]],
@@ -433,10 +434,10 @@ def _ensure_desktop_file():
     desktop_file.write_text(
         "[Desktop Entry]\n"
         "Type=Application\n"
-        "Name=Prism Desktop\n"
+        f"Name={APP_NAME}\n"
         "Comment=Home Assistant Tray Application\n"
-        "Exec=prism-desktop\n"
-        "Icon=prism-desktop\n"
+        f"Exec={APP_SLUG}\n"
+        f"Icon={APP_SLUG}\n"
         "Categories=Utility;\n"
         "Terminal=false\n"
     )

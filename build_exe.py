@@ -3,6 +3,7 @@ import sys
 import shutil
 import tempfile
 from pathlib import Path
+from core.branding import APP_EXE_FILENAME, APP_EXECUTABLE_NAME, APP_CONFIG_DIR, APP_NAME
 
 
 def write_build_info(base_dir: Path):
@@ -37,8 +38,8 @@ def write_build_info(base_dir: Path):
     output_path.write_text(content)
 
 def build():
-    """Build the Prism Desktop executable."""
-    print("Building Prism Desktop...")
+    """Build the AetherDesk executable."""
+    print(f"Building {APP_NAME}...")
 
     # Define paths
     base_dir = Path(__file__).parent
@@ -58,7 +59,7 @@ def build():
         sys.executable, "-m", "PyInstaller",
         "--noconsole",
         "--onefile",
-        "--name", "PrismDesktop",
+        "--name", APP_EXECUTABLE_NAME,
         "--add-data", f"{font_path};.",  # Windows separator is ;
         "--exclude", "PySide6",  # Avoid Qt binding conflict
     ]
@@ -99,8 +100,8 @@ def build():
             ico_tmp.unlink()
 
     print("\nBuild complete!")
-    print(f"Executable is at: {dist_dir / 'PrismDesktop.exe'}")
-    print("Note: Configuration is stored in %APPDATA%/PrismDesktop/config.json")
+    print(f"Executable is at: {dist_dir / APP_EXE_FILENAME}")
+    print(f"Note: Configuration is stored in %APPDATA%/{APP_CONFIG_DIR}/config.json")
 
 if __name__ == "__main__":
     build()

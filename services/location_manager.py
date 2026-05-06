@@ -10,6 +10,7 @@ import asyncio
 import logging
 from pathlib import Path
 from typing import Optional
+from core.branding import APP_NAME, APP_SLUG
 
 logger = logging.getLogger(__name__)
 
@@ -80,12 +81,12 @@ async def is_geoclue2_available() -> bool:
 
 def ensure_desktop_file() -> None:
     """
-    Create ~/.local/share/applications/prism-desktop.desktop if it does not
+    Create ~/.local/share/applications/<app>.desktop if it does not
     exist.  GeoClue2 requires a matching .desktop file for the DesktopId
     property or it will refuse to provide location data.
     """
     desktop_dir = Path.home() / '.local' / 'share' / 'applications'
-    desktop_file = desktop_dir / 'prism-desktop.desktop'
+    desktop_file = desktop_dir / f'{APP_SLUG}.desktop'
 
     if desktop_file.exists():
         return
@@ -94,10 +95,10 @@ def ensure_desktop_file() -> None:
     desktop_file.write_text(
         "[Desktop Entry]\n"
         "Type=Application\n"
-        "Name=Prism Desktop\n"
+        f"Name={APP_NAME}\n"
         "Comment=Home Assistant Tray Application\n"
-        "Exec=prism-desktop\n"
-        "Icon=prism-desktop\n"
+        f"Exec={APP_SLUG}\n"
+        f"Icon={APP_SLUG}\n"
         "Categories=Utility;\n"
         "Terminal=false\n"
     )
@@ -238,7 +239,7 @@ async def _geoclue2_get_position() -> Optional[dict]:
         await client_props.call_set(
             'org.freedesktop.GeoClue2.Client',
             'DesktopId',
-            Variant('s', 'prism-desktop'),
+            Variant('s', APP_SLUG),
         )
         # RequestedAccuracyLevel: 8 = EXACT (GPS-level / best available)
         await client_props.call_set(

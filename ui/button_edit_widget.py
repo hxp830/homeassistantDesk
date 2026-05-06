@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QColor, QFont
 from ui.widgets.toggle_switch import ToggleSwitch
+from core.i18n import tr, on_language_changed
 
 class ButtonEditWidget(QWidget):
     """
@@ -61,6 +62,7 @@ class ButtonEditWidget(QWidget):
         
         self.setup_ui()
         self.load_config()
+        on_language_changed(self._retranslate_ui)
     
     def _update_stylesheet(self):
         """Update the stylesheet matching the active theme."""
@@ -199,24 +201,23 @@ class ButtonEditWidget(QWidget):
         header_layout = QHBoxLayout()
         header_layout.setContentsMargins(0, 0, 0, 10)
         
-        self.cancel_btn = QPushButton("Cancel")
+        self.cancel_btn = QPushButton()
         self.cancel_btn.setMinimumWidth(70)
         self.cancel_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.cancel_btn.clicked.connect(self.cancelled.emit)
         
-        title_text = "Edit Button" if self.config else "Add Button"
-        title = QLabel(title_text)
-        title.setObjectName("headerTitle")
-        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.title_label = QLabel()
+        self.title_label.setObjectName("headerTitle")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
-        self.save_btn = QPushButton("Save")
+        self.save_btn = QPushButton()
         self.save_btn.setObjectName("primaryBtn")
         self.save_btn.setMinimumWidth(70)
         self.save_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.save_btn.clicked.connect(self.save)
         
         header_layout.addWidget(self.cancel_btn)
-        header_layout.addWidget(title)
+        header_layout.addWidget(self.title_label)
         header_layout.addWidget(self.save_btn)
         
         layout.addLayout(header_layout)
@@ -227,7 +228,7 @@ class ButtonEditWidget(QWidget):
         self.form.setHorizontalSpacing(16)
         
         # --- Config Section ---
-        self._add_section_header("CONFIGURATION")
+        self.config_header = self._add_section_header("CONFIGURATION")
         
         self.label_input = QLineEdit()
         self.label_input.setPlaceholderText("e.g. Living Room")
@@ -504,6 +505,7 @@ class ButtonEditWidget(QWidget):
         
         layout.addLayout(self.form)
         self.adjustSize()
+        self._retranslate_ui()
         
     def _create_entity_combo(self):
         """Create a combobox configured for long entity IDs, preventing layout clipping."""
@@ -529,6 +531,86 @@ class ButtonEditWidget(QWidget):
         lbl.setObjectName("sectionHeader")
         self.form.addRow(lbl)
         return lbl
+
+    def _set_row_label(self, field, text: str):
+        label = self.form.labelForField(field)
+        if label:
+            label.setText(text)
+
+    def _retranslate_ui(self):
+        self.cancel_btn.setText(tr("button.cancel"))
+        self.save_btn.setText(tr("button.save"))
+        self.title_label.setText(tr("button.edit_title") if self.config else tr("button.add_title"))
+        self.config_header.setText(tr("button.section.configuration"))
+        self.appearance_header.setText(tr("button.section.appearance"))
+        self.shortcut_header.setText(tr("button.section.shortcut"))
+        self.label_input.setPlaceholderText(tr("button.label_placeholder"))
+        self.entity_combo.lineEdit().setPlaceholderText(tr("button.entity_placeholder"))
+        self.icon_input.setPlaceholderText(tr("button.icon_placeholder"))
+        self.show_album_art_check.setText(tr("button.show_album_art"))
+        self.show_album_art_check.setToolTip(tr("button.show_album_art_tooltip"))
+        self.animated_bg_toggle.setText(tr("button.animated_background"))
+        self.animated_bg_toggle.setToolTip(tr("button.animated_background_tooltip"))
+        self.sun_remaining_check.setText(tr("button.show_solar_timer"))
+        self.sun_remaining_check.setToolTip(tr("button.show_solar_timer_tooltip"))
+        self.custom_shortcut_check.setText(tr("button.enable_custom_shortcut"))
+        self.shortcut_display.setPlaceholderText(tr("settings.none"))
+        self.friendly_toggle_btn.setToolTip(tr("button.display_tooltip"))
+        self.friendly_toggle_btn.setText(tr("button.show_ids") if ButtonEditWidget._global_show_friendly_names else tr("button.show_names"))
+        self.script_add_arg_btn.setText(tr("button.add_argument"))
+        self._set_row_label(self.label_input, tr("button.label"))
+        self._set_row_label(self.type_combo, tr("button.type"))
+        self._set_row_label(self.friendly_toggle_btn, tr("button.display"))
+        self._set_row_label(self.entity_combo, tr("button.entity"))
+        self._set_row_label(self.precision_spin, tr("button.decimals"))
+        self._set_row_label(self.display_style_combo, tr("button.display_style"))
+        self._set_row_label(self.sensor_min_spin, tr("button.min"))
+        self._set_row_label(self.sensor_max_spin, tr("button.max"))
+        self._set_row_label(self.icon_input, tr("button.icon"))
+        self._set_row_label(self.color_widget, tr("button.color"))
+        self._set_row_label(self.shortcut_keys_container, tr("button.keys"))
+        self.service_label.setText(tr("button.service"))
+        self.automation_action_label.setText(tr("button.action"))
+        self.lock_action_label.setText(tr("button.action"))
+        self.script_args_label.setText(tr("button.arguments"))
+        self.printer_state_label.setText(tr("button.printer_state"))
+        self.printer_progress_label.setText(tr("button.printer_progress"))
+        self.printer_camera_label.setText(tr("button.printer_camera"))
+        self.printer_nozzle_label.setText(tr("button.printer_nozzle"))
+        self.printer_nozzle_target_label.setText(tr("button.printer_nozzle_target"))
+        self.printer_bed_label.setText(tr("button.printer_bed"))
+        self.printer_bed_target_label.setText(tr("button.printer_bed_target"))
+        self.printer_pause_label.setText(tr("button.printer_pause"))
+        self.printer_stop_label.setText(tr("button.printer_stop"))
+        self.display_style_combo.setItemText(0, tr("button.display_style.normal"))
+        self.display_style_combo.setItemText(1, tr("button.display_style.gauge"))
+        self.display_style_combo.setItemText(2, tr("button.display_style.bar"))
+        self.automation_action_combo.setItemText(0, tr("button.automation.toggle"))
+        self.automation_action_combo.setItemText(1, tr("button.automation.trigger"))
+        self.lock_action_combo.setItemText(0, tr("button.lock.smart"))
+        self.lock_action_combo.setItemText(1, tr("button.lock.lock"))
+        self.lock_action_combo.setItemText(2, tr("button.lock.unlock"))
+        type_text_keys = {
+            "automation": "button.type.automation",
+            "camera": "button.type.camera",
+            "climate": "button.type.climate",
+            "curtain": "button.type.curtain",
+            "fan": "button.type.fan",
+            "input_number": "button.type.input_number",
+            "lawn_mower": "button.type.lawn_mower",
+            "switch": "button.type.switch",
+            "lock": "button.type.lock",
+            "media_player": "button.type.media_player",
+            "scene": "button.type.scene",
+            "script": "button.type.script",
+            "widget": "button.type.widget",
+            "sun": "button.type.sun",
+            "vacuum": "button.type.vacuum",
+            "weather": "button.type.weather",
+            "3d_printer": "button.type.3d_printer",
+        }
+        for idx, (_label, internal) in enumerate(self.TYPE_DEFINITIONS):
+            self.type_combo.setItemText(idx, tr(type_text_keys[internal]))
 
     def populate_entities(self):
         """Fill entity dropdown based on the selected button type."""
@@ -690,7 +772,7 @@ class ButtonEditWidget(QWidget):
     def _toggle_entity_display(self):
         """Toggle between friendly name and entity ID display in all combos."""
         ButtonEditWidget._global_show_friendly_names = not ButtonEditWidget._global_show_friendly_names
-        self.friendly_toggle_btn.setText("Show IDs" if ButtonEditWidget._global_show_friendly_names else "Show Names")
+        self.friendly_toggle_btn.setText(tr("button.show_ids") if ButtonEditWidget._global_show_friendly_names else tr("button.show_names"))
         self.populate_entities()
 
     def _current_type(self):
@@ -831,12 +913,12 @@ class ButtonEditWidget(QWidget):
         row_layout.setSpacing(4)
 
         key_input = QLineEdit()
-        key_input.setPlaceholderText("Variable name")
+        key_input.setPlaceholderText(tr("button.variable_name"))
         key_input.setText(key)
         row_layout.addWidget(key_input, 1)
 
         value_input = QLineEdit()
-        value_input.setPlaceholderText("Value")
+        value_input.setPlaceholderText(tr("button.value"))
         value_input.setText(value)
         row_layout.addWidget(value_input, 1)
 
@@ -1099,14 +1181,14 @@ class ButtonEditWidget(QWidget):
         if checked:
             # Stop State (Square)
             self.record_icon.setStyleSheet("background-color: white; border-radius: 2px;") 
-            self.shortcut_display.setText("Press keys...")
+            self.shortcut_display.setText(tr("button.press_keys"))
             self.input_manager.start_recording()
         else:
             # Record State (Circle)
             self.record_icon.setStyleSheet("background-color: white; border-radius: 6px;")
             self.input_manager.restore_shortcut()
             # Restore if empty
-            if self.shortcut_display.text() == "Press keys...":
+            if self.shortcut_display.text() == tr("button.press_keys"):
                  sc = self.config.get('custom_shortcut', {}) if self.config else {}
                  self.shortcut_display.setText(sc.get('value', ''))
 

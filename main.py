@@ -39,7 +39,7 @@ WELCOME_ARG = "--welcome"
 if __name__ == '__main__' and TOGGLE_ARG in sys.argv[1:]:
     if send_local_command("toggle"):
         sys.exit(0)
-    print("No running Prism Desktop instance found for --toggle")
+    print(f"No running {APP_NAME} instance found for --toggle")
     sys.exit(1)
 
 import qasync
@@ -66,6 +66,8 @@ from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtCore import QUrl
 from core.temperature_utils import normalize_temperature_unit
 from core.build_info import APP_VERSION, get_display_version
+from core.i18n import set_language
+from core.branding import APP_NAME, APP_SLUG, UPSTREAM_RELEASES_URL
 
 DISPLAY_VERSION = get_display_version()
 
@@ -87,6 +89,7 @@ class PrismDesktopApp(QObject):
         # Configuration
         self.config_manager = ConfigManager()
         self.config = self.config_manager.config
+        set_language(self.config.get('appearance', {}).get('language', 'en'))
         
         # Components
         self.theme_manager = ThemeManager()
@@ -246,7 +249,7 @@ class PrismDesktopApp(QObject):
         if self.local_command_server.start():
             self.local_command_server.command_received.connect(self._handle_local_command)
         else:
-            logging.warning("Failed to start local Prism command server")
+            logging.warning(f"Failed to start local {APP_NAME} command server")
 
     def _tray_geometry(self) -> QRect:
         """Return the tray icon geometry when available."""
@@ -504,6 +507,7 @@ class PrismDesktopApp(QObject):
 
         self.config_manager.config = new_config
         self.config = self.config_manager.config
+        set_language(self.config.get('appearance', {}).get('language', 'en'))
         self._temperature_unit_initialized = 'temperature_unit' in self.config.get('appearance', {})
         self.save_config()
         
@@ -1043,7 +1047,7 @@ class PrismDesktopApp(QObject):
             self.dashboard,
             new_version,
             on_confirm=lambda: QDesktopServices.openUrl(
-                QUrl("https://github.com/lasselian/Prism-Desktop/releases/latest")
+                QUrl(UPSTREAM_RELEASES_URL)
             ),
         )
 
@@ -1056,13 +1060,13 @@ if __name__ == '__main__':
  |  __/| |  | \__ \ | | | | |
  |_|   |_|  |_|___/_| |_| |_|
 
- Home Assistant Desktop  v""" + DISPLAY_VERSION + """
+ """ + APP_NAME + """  v""" + DISPLAY_VERSION + """
  ----------------------------------------------------
 """)
 
     # Bootstrap
     qt_argv = list(sys.argv)
-    qt_argv[0] = "prism-desktop"
+    qt_argv[0] = APP_SLUG
     app = QApplication(qt_argv)
     app.setQuitOnLastWindowClosed(False)
     

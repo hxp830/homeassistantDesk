@@ -21,8 +21,9 @@ from cryptography.hazmat.primitives import hashes
 import base64
 
 from core.utils import get_config_path
+from core.branding import APP_SERVICE_NAME
 
-SERVICE_NAME = "PrismDesktop"
+SERVICE_NAME = APP_SERVICE_NAME
 KEY_TOKEN = "ha_token"
 
 # File names for encrypted fallback (stored next to config.json)
@@ -45,7 +46,7 @@ def _probe_keyring() -> bool:
         return _keyring_available
 
     _keyring_probed = True
-    probe_key = "__prism_probe__"
+    probe_key = "__aether_probe__"
     probe_val = "probe_test"
 
     try:

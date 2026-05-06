@@ -1,7 +1,7 @@
-# Prism Desktop
+# AetherDesk
 **A Home Assistant PC App for Windows & Linux**
 
-Prism Desktop brings Home Assistant to your PC with a modern, lightweight desktop experience.  
+AetherDesk brings Home Assistant to your PC with a modern, lightweight desktop experience.  
 It features a sleek dashboard with smooth animations, build in notifications, intuitive drag-and-drop customization, and deep integration with Home Assistant entities.
 
 
@@ -22,6 +22,18 @@ It features a sleek dashboard with smooth animations, build in notifications, in
 - **Real-time Sync**: Uses Home Assistant's WebSocket API for instant state updates.
 - **Customizable Appearance**: Choose from different border effects (like Rainbow or Aurora) and customize button colors.
 - **Keyboard Shortcuts**: Create custom shortcuts for your button tiles
+- **Multilingual UI base**: Language-ready structure for English, Simplified Chinese, and Russian
+
+## Multilingual Development
+
+This workspace now includes a basic i18n layer for:
+
+- English (`en`)
+- Simplified Chinese (`zh`)
+- Russian (`ru`)
+
+The current approach uses a single codebase with runtime language switching instead of three separate forks.  
+Language is stored in `appearance.language`, and the translation registry lives in `core/i18n.py`.
 
 ## Supported Entity Types
 - Automation
@@ -62,18 +74,18 @@ It features a sleek dashboard with smooth animations, build in notifications, in
 ## Installation
 
 ### Windows Installer
-Download the latest `PrismDesktopSetup.exe` from the Releases page. This will install the app and optionally set it to start with Windows.
+Download the latest `AetherDeskSetup.exe` from the Releases page. This will install the app and optionally set it to start with Windows.
 
 ### Linux Installer
 Download the latest `.AppImage` from the Releases page.
 
 1. Make it executable:
    ```bash
-   chmod +x PrismDesktop-x86_64.AppImage
+   chmod +x AetherDesk-x86_64.AppImage
    ```
 2. Run it:
    ```bash
-   ./PrismDesktop-x86_64.AppImage
+   ./AetherDesk-x86_64.AppImage
    ```
 
 > **Note:** Some distributions (e.g. Ubuntu 22.04+) require `libfuse2` for AppImages to run:
@@ -85,7 +97,7 @@ Download the latest `.AppImage` from the Releases page.
 - Install `AppIndicator and KStatusNotifierItem Support` through `Extension Manager` for system tray support.
 - Wayland: GNOME has limited global shortcut support. As a workaround, you can bind the following command to a custom keyboard shortcut in your system settings to toggle the app:
   ```bash
-  /path/to/PrismDesktop-x86_64.AppImage --toggle
+  /path/to/AetherDesk-x86_64.AppImage --toggle
   ```
   Binding shortcuts to individual entities is not supported.
 

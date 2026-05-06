@@ -10,13 +10,14 @@ import socket as _socket
 import tempfile
 
 from core.utils import get_config_path
+from core.branding import APP_SLUG
 
 
 def prism_ipc_server_name() -> str:
     """Return a stable local server name for the current Prism config path."""
     config_path = str(get_config_path().resolve())
     digest = hashlib.sha1(config_path.encode("utf-8")).hexdigest()[:12]
-    return f"prism-desktop-{digest}"
+    return f"{APP_SLUG}-{digest}"
 
 
 def send_local_command(command: str, timeout_ms: int = 1000) -> bool:

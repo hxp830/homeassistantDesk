@@ -13,6 +13,7 @@ import tempfile
 from typing import Optional
 from PyQt6.QtWidgets import QSystemTrayIcon
 from PyQt6.QtCore import QObject
+from core.branding import APP_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 class NotificationManager(QObject):
     """Native system notifications with image support."""
 
-    APP_NAME = "Prism Desktop"
+    APP_NAME = APP_NAME
 
     def __init__(self, tray_icon: QSystemTrayIcon = None, ha_client=None):
         super().__init__()

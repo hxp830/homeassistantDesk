@@ -69,6 +69,7 @@ class ConfigManager:
                 "button_style": "Gradient",
                 "border_effect": "Liquid Mercury",
                 "tray_position": "bottom",
+                "language": "en",
                 "pages": 1,
                 "pin_window": False,
             },

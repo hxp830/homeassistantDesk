@@ -2,6 +2,7 @@ import asyncio
 import logging
 import aiohttp
 from typing import Optional
+from core.i18n import tr
 
 class HAClient:
     """Asynchronous client for Home Assistant REST API."""
@@ -52,7 +53,7 @@ class HAClient:
         Returns (success, message).
         """
         if not self.url or not self.token:
-            return False, "URL and token are required"
+            return False, tr("ha.url_token_required")
         
         try:
             # Create a temporary session or use the shared one? Use shared.
@@ -68,16 +69,16 @@ class HAClient:
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 async with session.get(f"{self.url}/api/", timeout=5) as response:
                     if response.status == 200:
-                        return True, "Connected"
+                        return True, tr("ha.connected")
                     elif response.status == 401:
-                        return False, "Invalid access token"
+                        return False, tr("ha.invalid_token")
                     else:
-                        return False, f"HTTP {response.status}"
+                        return False, tr("ha.http_status", status=response.status)
         except aiohttp.ClientError as e:
             self.logger.error(f"Connection test error: {e}")
-            return False, f"Connection error: {e}"
+            return False, tr("ha.connection_error", error=e)
         except Exception as e:
-             return False, f"Error: {e}"
+             return False, tr("ha.generic_error", error=e)
     
     async def get_entities(self) -> list[dict]:
         """Fetch all entities."""

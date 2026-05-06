@@ -1,10 +1,10 @@
-; Script generated for Prism Desktop
+; Script generated for AetherDesk
 ; Requires Inno Setup: https://jrsoftware.org/isdl.php
 
-#define MyAppName "Prism Desktop"
+#define MyAppName "AetherDesk"
 #define MyAppVersion "1.5.0"
-#define MyAppPublisher "Lasse Lian"
-#define MyAppExeName "PrismDesktop.exe"
+#define MyAppPublisher "AetherDesk"
+#define MyAppExeName "AetherDesk.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -18,7 +18,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=installer
-OutputBaseFilename=PrismDesktopSetup
+OutputBaseFilename=AetherDeskSetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
