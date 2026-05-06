@@ -17,6 +17,7 @@ Release date: 2026-05-06
 - Updated Windows executable naming, installer naming, and Linux packaging naming
 - Updated tray text, welcome text, notifications, settings text, and editor text for unified branding
 - Updated build metadata version to `1.5.1`
+- Hardened the Windows PyInstaller build flow to avoid checksum and timestamp rewrite failures on some systems
 
 ### Verified
 

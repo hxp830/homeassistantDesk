@@ -3,6 +3,7 @@ import sys
 import shutil
 import tempfile
 from pathlib import Path
+
 from core.branding import APP_EXE_FILENAME, APP_EXECUTABLE_NAME, APP_CONFIG_DIR, APP_NAME
 
 
@@ -94,7 +95,17 @@ def build():
     print(f"Running: {' '.join(str(x) for x in cmd)}")
     
     try:
-        subprocess.check_call(cmd, cwd=base_dir)
+        if sys.platform == "win32":
+            # Some Windows environments briefly lock the freshly built EXE,
+            # which breaks PyInstaller's checksum/timestamp rewrite step.
+            from PyInstaller import __main__ as pyinstaller_main
+            from PyInstaller.building import api as pyinstaller_api
+
+            pyinstaller_api.winutils.set_exe_build_timestamp = lambda *args, **kwargs: None
+            pyinstaller_api.winutils.update_exe_pe_checksum = lambda *args, **kwargs: None
+            pyinstaller_main.run([str(x) for x in cmd[3:]])
+        else:
+            subprocess.check_call(cmd, cwd=base_dir)
     finally:
         if ico_tmp and ico_tmp.exists():
             ico_tmp.unlink()
